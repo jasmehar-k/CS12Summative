@@ -254,7 +254,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
         else{
             if (newLaneCars != null){
                 for (Car newLaneCar : newLaneCars){
-                    if(!(newLaneCar.getRightValue() < this.getLeftValue() - 7 || newLaneCar.getLeftValue() > this.getRightValue() + 7 )){ // checks if there's another car where this car needs to go
+                    if(newLaneCar.getRightValue() < this.getLeftValue() - 7 || newLaneCar.getLeftValue() > this.getRightValue() + 7 ){ // checks if there's another car where this car needs to go
                         // car blocking    
                     return;
                     }
@@ -329,8 +329,8 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
             }
 
             //see if car has already passed intersection
-            if((isHorizontal && getLeftValue() > light.getRightValue()-5) ||
-               (!isHorizontal && getBottomValue() < light.getTopValue()+5))
+            if((isHorizontal && getRightValue() > light.getRightValue()+5) ||
+               (!isHorizontal && getTopValue() < light.getTopValue()-5))
             {
                 passed = true;
             }
@@ -346,10 +346,10 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
                 else if (lane == 5 && x >= 350){
                     turn (5, 6);
                 }
-                else if (lane == 4 && x > 470 ){
+                else if (lane == 4 && x >= 300 ){
                     pass(4,1);
                }
-                else if (lane == 3 && y < 205){
+                else if (lane == 3 && y <= 250){
                     pass (3,6);
                 }
                 
