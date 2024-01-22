@@ -165,25 +165,21 @@ public class Car extends TrafficObject implements Runnable {
         }
     }
 
-    public boolean checkRedLight(){ // returns true if light is red and car is at the intersection
-        if (light.checkIsGreen()){
-            return false;
-        }
+    public boolean checkIfCarShouldStop(){ // returns true if light is red and car is at the intersection
+       if(passed)
+       {
+           return false;
+       }
         
-        return checkIntersection();
+       return checkIfAtIntersection() && !light.checkIsGreen();
     }
         
-public boolean checkIntersection(){ // returns true if at the intersection
-    if (passed){
-        return false;
-    }
-    if (isHorizontal && light.getLeftValue() - x <= 30){
-        //System.out.println("horixontal intersection");
+public boolean checkIfAtIntersection(){ // returns true if at the intersection
+    if (isHorizontal && x >= light.getLeftValue() - 70){
         return true;
 
     }
-    else if (!isHorizontal && y - light.getBottomValue() <= 30){
-        //System.out.println(y-light.getBottomValue());
+    else if (!isHorizontal && y <= light.getBottomValue() + 110){
         return true;
         
     }
@@ -303,7 +299,7 @@ public boolean checkIntersection(){ // returns true if at the intersection
             
             move();
             // controlling speed:
-            if (checkRedLight() || checkCarFront()){  // light is red or car in front
+            if (checkIfCarShouldStop() || checkCarFront()){  // light is red or car in front
                 //System.out.println("red light or car");
                 if (speed > 0){ // moving
                     speed = 0;
@@ -330,18 +326,26 @@ public boolean checkIntersection(){ // returns true if at the intersection
                     changeLanes(1, lane, lane - 1);
                 }
             }
+
+            //see if car has already passed intersection
+            if((isHorizontal && getLeftValue() > light.getRightValue()) ||
+               (!isHorizontal && getBottomValue() < light.getTopValue()))
+            {
+                passed = true;
+            }
+
             // at intersection, light is green
-            if (!checkRedLight()){
+            if (!checkIfCarShouldStop()){
                 accelerate();
                 move();
-                passed = true;
+
                 if (lane ==2 && y <= 240){
                     turn(2, 1);
                 }
                 else if (lane == 5 && x >= 360){
                     turn (5, 6);
                 }
-                else if (lane == 4 && x<467 ){
+                else if (lane == 4 && x > 467 ){
                     pass(4,1);
                }
                 else if (lane == 3 && y < 197){

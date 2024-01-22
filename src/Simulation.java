@@ -14,6 +14,7 @@ public class Simulation implements Runnable{
     int lightBTime;
     Light lightA;
     Light lightB;
+    int lastLightToggleTime = 0;
     SimulationTimer timerA = new SimulationTimer("TimerA"); // timing how long car A is taking to reach its destination
     SimulationTimer timerB = new SimulationTimer("TimerB"); // timing how long car B is taking to reach its destination
     SimulationTimer timer = new SimulationTimer("Timer");  // timing the whole simulation
@@ -27,7 +28,7 @@ public class Simulation implements Runnable{
     ArrayList<Car> carList = new ArrayList<Car>();;
     Car carA = new Car(0,lane14Y, 50, 25,4,4, lightA, intersection, true, this);
     Car carB = new Car(lane36X,470, 25, 50, 3,3,lightB,intersection, true, this);
-    
+     
     Car car20 = new Car(lane27X,320,25,50,2,genRandom(2, 3),lightB,intersection,false,this);
     
     Car car21 = new Car(lane27X,395,25,50,2,genRandom(2, 3),lightB,intersection,false,this);
@@ -61,10 +62,8 @@ public class Simulation implements Runnable{
     Car car54 = new Car(150,lane05Y,50,25,5,genRandom(4, 5),lightA,intersection,false,this);
     Car car55 = new Car(225,lane05Y,50,25,5,genRandom(4, 5),lightA,intersection,false,this);
     Car car56 = new Car(300,lane05Y,50,25,5,genRandom(4, 5),lightA,intersection,false,this);   
-    
 
 
-    
     public Simulation(Light lightA, Light lightB) {
         this.lightATime = lightA.time;
         this.lightBTime = lightB.time;
@@ -73,6 +72,7 @@ public class Simulation implements Runnable{
 
         carA.setLight(lightA);
         carB.setLight(lightB);
+        
         
         car20.setLight(lightB);
         car21.setLight(lightB);
@@ -105,6 +105,7 @@ public class Simulation implements Runnable{
         car54.setLight(lightA);
         car55.setLight(lightA);
         car56.setLight(lightA);
+        
 
         carSetup(car43, carA, 4);
         carSetup(car44, car43, 4);
@@ -121,6 +122,7 @@ public class Simulation implements Runnable{
         carSetup(car54, car53, 5);
         carSetup(car55, car54, 5);
         carSetup(car56, car55, 5);
+        
 
         carList.add(carA);
         carList.add(carB);
@@ -152,6 +154,7 @@ public class Simulation implements Runnable{
         carList.add(car54);
         carList.add(car55);
         carList.add(car56);
+        
 
         
 
@@ -218,7 +221,7 @@ public class Simulation implements Runnable{
     Thread t56 = new Thread(car56);
 
     Thread simulationThread = new Thread(this);
-    /*public void run(){
+    public void run(){
         while (!isAllDone()){
 
             if (timer.secondPassed()) {
@@ -229,25 +232,31 @@ public class Simulation implements Runnable{
                 }
             }
 
-            if (timer.getCurrentSeconds() % (lightATime + lightBTime) == lightATime || timer.getCurrentSeconds() == lightATime) {
+            if (lightA.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightATime) {
                 lightA.setValue(false);
                 lightB.setValue(true);
-                //System.out.println("light b");
+
+                lastLightToggleTime = timer.getCurrentSeconds();
+                System.out.println("light b");
             }
-    
-            if (timer.getCurrentSeconds() % (lightATime + lightBTime) == 0) {
+            else if (lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightBTime) {
                 lightA.setValue(true);
                 lightB.setValue(false);
-                //System.out.println("light a");
-            }
 
+                lastLightToggleTime = timer.getCurrentSeconds();
+                System.out.println("light a");
+            }
         }
         timer.stopTimer();
         System.out.println("Car A Time: " + timerA.getSeconds());
         System.out.println("Car B Time: " + timerB.getSeconds());
-    }*/
+    }
+    
+    /* 
     public void run(){
         while (!isAllDone()){
+
+            //System.out.println("lightA="+lightA.checkIsGreen() + ", lightB="+lightB.checkIsGreen()); 
 
             if (timer.secondPassed()) {
                 if ((timer.getCurrentSeconds() % 60) < 10) {
@@ -282,6 +291,7 @@ public class Simulation implements Runnable{
         System.out.println("Car A Time: " + timerA.getSeconds());
         System.out.println("Car B Time: " + timerB.getSeconds());
     }
+    */
 
     public void runSim() throws InterruptedException{
         timerA.startTimer();
@@ -324,8 +334,8 @@ public class Simulation implements Runnable{
         t54.start();
         t55.start();
         t56.start();
-
-/* 
+        
+        /* 
         tA.join();
         tB.join();
         
@@ -360,6 +370,7 @@ public class Simulation implements Runnable{
         t55.join();
         t56.join();
         */
+        
         
     }
     public void setADone(){
