@@ -14,7 +14,7 @@ public class Simulation implements Runnable{
     int lightBTime;
     Light lightA;
     Light lightB;
-    int lastLightToggleTime = 0;
+    long lastLightToggleTime = 0;
     SimulationTimer timerA = new SimulationTimer("TimerA"); // timing how long car A is taking to reach its destination
     SimulationTimer timerB = new SimulationTimer("TimerB"); // timing how long car B is taking to reach its destination
     SimulationTimer timer = new SimulationTimer("Timer");  // timing the whole simulation
@@ -402,11 +402,11 @@ public class Simulation implements Runnable{
         return false;
     }
 
-    public int returnTimeA() {
+    public long returnTimeA() {
         return timerA.getSeconds();
     }
 
-    public int returnTimeB() {
+    public long returnTimeB() {
         return timerB.getSeconds();
     }
 }

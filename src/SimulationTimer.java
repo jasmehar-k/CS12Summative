@@ -18,14 +18,14 @@ public class SimulationTimer {
         }
     }
 
-    public int getSeconds() {
+    public long getSeconds() {
         long elapsedTime = stopTime - startTime;
-        return (int) (elapsedTime / nspers);
+        return (elapsedTime / nspers);
     }
 
-    public int getCurrentSeconds() {
+    public long getCurrentSeconds() {
         long elapsedTime = System.nanoTime() - startTime;
-        return (int) (elapsedTime / nspers);
+        return (elapsedTime / nspers);
     }
 
     public boolean secondPassed() {

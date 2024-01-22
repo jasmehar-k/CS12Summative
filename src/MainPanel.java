@@ -16,8 +16,8 @@ public class MainPanel extends JPanel {
     ArrayList<Integer> attempts = new ArrayList<>();
     ArrayList<Integer> lightTimesA = new ArrayList<>();
     ArrayList<Integer> lightTimesB = new ArrayList<>();
-    ArrayList<Integer> carTimesA = new ArrayList<>();
-    ArrayList<Integer> carTimesB = new ArrayList<>();
+    ArrayList<Long> carTimesA = new ArrayList<>();
+    ArrayList<Long> carTimesB = new ArrayList<>();
     ArrayList<Double> averages = new ArrayList<>();
     public MainPanel() {
         importData(attempts, lightTimesA, lightTimesB, carTimesA, carTimesB, averages);
@@ -71,8 +71,8 @@ public class MainPanel extends JPanel {
             lightTimesB.add(lightTimeB);
 
 
-            Light lightA = new Light(349, 250, 1, 80, true, lightTimeA);
-            Light lightB = new Light(349, 230, 80, 1, false, lightTimeB);
+            Light lightA = new Light(349, 500, 1, 80, true, lightTimeA);
+            Light lightB = new Light(349, 305, 80, 1, false, lightTimeB);
 
             Simulation simulation = new Simulation(lightA, lightB);
             try {
@@ -144,7 +144,7 @@ public class MainPanel extends JPanel {
             sf.setVisible(true);
             sf.setSize(828, 545);
          }
-    public static void importData(ArrayList<Integer> list0, ArrayList<Integer> list1, ArrayList<Integer> list2, ArrayList<Integer> list3, ArrayList<Integer> list4, ArrayList<Double> list5) {
+    public static void importData(ArrayList<Integer> list0, ArrayList<Integer> list1, ArrayList<Integer> list2, ArrayList<Long> list3, ArrayList<Long> list4, ArrayList<Double> list5) {
         String file = "src\\info.csv";
         BufferedReader reader = null;
         String line = "";
@@ -160,8 +160,8 @@ public class MainPanel extends JPanel {
                 list0.add(Integer.valueOf(values[0]));
                 list1.add(Integer.valueOf(values[1]));
                 list2.add(Integer.valueOf(values[2]));
-                list3.add(Integer.valueOf(values[3]));
-                list4.add(Integer.valueOf(values[4]));
+                list3.add(Long.valueOf(values[3]));
+                list4.add(Long.valueOf(values[4]));
                 list5.add(Double.valueOf(values[5]));
             }
         } catch (Exception e) {
@@ -169,7 +169,7 @@ public class MainPanel extends JPanel {
         }
     }
 
-    public static void exportData(int length, ArrayList<Integer> list0, ArrayList<Integer> list1, ArrayList<Integer> list2, ArrayList<Integer> list3, ArrayList<Integer> list4, ArrayList<Double> list5) {
+    public static void exportData(int length, ArrayList<Integer> list0, ArrayList<Integer> list1, ArrayList<Integer> list2, ArrayList<Long> list3, ArrayList<Long> list4, ArrayList<Double> list5) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("src\\info.csv"))){
             writer.write("attempts,lightA,lightB,timeA,timeB,averages");
             writer.newLine();
