@@ -19,6 +19,8 @@ public class MainPanel extends JPanel {
     ArrayList<Long> carTimesA = new ArrayList<>();
     ArrayList<Long> carTimesB = new ArrayList<>();
     ArrayList<Double> averages = new ArrayList<>();
+    Simulation simulation = null;
+    JTable simCSVTable = null;
     public MainPanel() {
         importData(attempts, lightTimesA, lightTimesB, carTimesA, carTimesB, averages);
 
@@ -51,13 +53,13 @@ public class MainPanel extends JPanel {
 
         RowSorter<TableModel> sorter = new TableRowSorter<>(model);
 
-        JTable table = new JTable(model);
-        table.setBounds(100, 55, 1000, 200);
-        table.setRowSorter(sorter);
+        simCSVTable = new JTable(model);
+        simCSVTable.setBounds(100, 55, 1000, 200);
+        simCSVTable.setRowSorter(sorter);
 
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.PAGE_START);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        add(new JScrollPane(simCSVTable), BorderLayout.CENTER);
 
         button.addActionListener(e -> {
             int lightTimeA = (Integer) spinnerA.getValue();
@@ -74,35 +76,28 @@ public class MainPanel extends JPanel {
             Light lightA = new Light(349, 500, 1, 80, true, lightTimeA);
             Light lightB = new Light(349, 305, 80, 1, false, lightTimeB);
 
-            Simulation simulation = new Simulation(lightA, lightB);
+            simulation = new Simulation(lightA, lightB, this);
             try {
                 simulation.runSim();
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
-
-            carTimesA.add(simulation.returnTimeA());
-            carTimesB.add(simulation.returnTimeB());
-            attempts.add(attempts.size() + 1);
-            averages.add(((double) simulation.returnTimeA() + (double) simulation.returnTimeB()) / 2);
-
-            int newLength = attempts.size();
-            exportData(newLength, attempts, lightTimesA, lightTimesB, carTimesA, carTimesB, averages);
-
-            refreshTable(table);
         });
     }
-    
 
-    /*  LaunchUI();
+    public void ExportData()
+    {
+        carTimesA.add(simulation.returnTimeA());
+        carTimesB.add(simulation.returnTimeB());
+        attempts.add(attempts.size() + 1);
+        averages.add(((double) simulation.returnTimeA() + (double) simulation.returnTimeB()) / 2);
 
-        lightTimesA.add(lightTimeA);
-        lightTimesB.add(lightTimeB);
+        int newLength = attempts.size();
+        exportData(newLength, attempts, lightTimesA, lightTimesB, carTimesA, carTimesB, averages);
 
-        Light lightA = new Light(320, 0, 1, 545, false, lightTimeA);
-        Light lightB = new Light(320, 300, 800, 1, true, lightTimeB);
-        Simulation simulation = new Simulation(lightA, lightB);
-        simulation.runSim(); */
+        refreshTable(simCSVTable);
+    }
+
     public void refreshTable (JTable table) {
         attempts.clear();
         lightTimesA.clear();

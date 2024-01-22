@@ -2,7 +2,7 @@ public class SimulationTimer {
     long startTime = 0;
     long stopTime = 0;
     boolean timerOn = false;
-    int nspers = 1000000000;
+    long nspers = 1000000000;
     String timerName = null;
     public SimulationTimer(String name) {
         timerName = name;
