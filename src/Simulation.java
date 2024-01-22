@@ -175,7 +175,7 @@ public class Simulation implements Runnable{
             }
         };
 
-        javax.swing.Timer aniTimer = new javax.swing.Timer(1200, listener);
+        javax.swing.Timer aniTimer = new javax.swing.Timer(500, listener);
         aniTimer.start();
     }
     
@@ -222,6 +222,7 @@ public class Simulation implements Runnable{
 
     Thread simulationThread = new Thread(this);
     public void run(){
+        boolean lightATurn = false;
         while (!isAllDone()){
 
             if (timer.secondPassed()) {
@@ -231,22 +232,32 @@ public class Simulation implements Runnable{
                     System.out.println(timer.getCurrentSeconds() / 60 + ":" + timer.getCurrentSeconds() % 60);
                 }
             }
-
+// Traffic Lights Code
             if (lightA.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightATime) {
                 lightA.setValue(false);
+                //lightB.setValue(true);
+                lastLightToggleTime = timer.getCurrentSeconds();
+            }
+            else if (!lightATurn && !lightA.checkIsGreen() && !lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == 10) {
                 lightB.setValue(true);
-
+                lightATurn = true;
                 lastLightToggleTime = timer.getCurrentSeconds();
                 System.out.println("light b");
             }
-            else if (lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightBTime) {
-                lightA.setValue(true);
+            else if ( lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightBTime) {
                 lightB.setValue(false);
-
+                //lightB.setValue(true);
+                lastLightToggleTime = timer.getCurrentSeconds();
+            }
+            else if (lightATurn && !lightA.checkIsGreen() && !lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == 10) {
+                lightA.setValue(true);
+                //lightB.setValue(true);
+                lightATurn = false;
                 lastLightToggleTime = timer.getCurrentSeconds();
                 System.out.println("light a");
             }
         }
+    
         timer.stopTimer();
         System.out.println("Car A Time: " + timerA.getSeconds());
         System.out.println("Car B Time: " + timerB.getSeconds());

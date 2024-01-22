@@ -158,10 +158,10 @@ public class Car extends TrafficObject implements Runnable {
         //System.out.println("speed: " + speed);
 
         if(isHorizontal){
-            x += speed/5;
+            x += speed/10;
         }
         else{
-            y -= speed/5;
+            y -= speed/10;
         }
     }
 
@@ -244,7 +244,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
         if (oldLane <4){
             if (newLaneCars != null){
                 for (Car newLaneCar : newLaneCars){
-                        if (!(newLaneCar.getBottomValue()<y- 7 || newLaneCar.getTopValue()>this.getBottomValue() + 7)){
+                        if (!(newLaneCar.getBottomValue() <y - 7 || newLaneCar.getTopValue()>this.getBottomValue() + 7)){
                             return;
                         }
                 }
@@ -278,14 +278,15 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
 
         isHorizontal = !isHorizontal;
         imagePath=newImagePath;
-        passed = true;
         System.out.println("turned");
         switchLanes(oldLane, newLane);
+        passed = true;
+
     }
     public void pass(int oldLane, int newLane) throws InterruptedException{
         //System.out.println("went straight " + lane );
-        passed = true;
         switchLanes(oldLane, newLane);
+        passed = true;
     }
 
     public void drive() throws InterruptedException{
@@ -328,8 +329,8 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
             }
 
             //see if car has already passed intersection
-            if((isHorizontal && getLeftValue() > light.getRightValue()) ||
-               (!isHorizontal && getBottomValue() < light.getTopValue()))
+            if((isHorizontal && getLeftValue() > light.getRightValue()-5) ||
+               (!isHorizontal && getBottomValue() < light.getTopValue()+5))
             {
                 passed = true;
             }
@@ -339,16 +340,16 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
                 accelerate();
                 move();
 
-                if (lane ==2 && y <= 240){
+                if (lane ==2 && y <= 250){
                     turn(2, 1);
                 }
-                else if (lane == 5 && x >= 360){
+                else if (lane == 5 && x >= 350){
                     turn (5, 6);
                 }
-                else if (lane == 4 && x > 467 ){
+                else if (lane == 4 && x > 470 ){
                     pass(4,1);
                }
-                else if (lane == 3 && y < 197){
+                else if (lane == 3 && y < 205){
                     pass (3,6);
                 }
                 
