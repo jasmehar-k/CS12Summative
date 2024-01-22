@@ -240,10 +240,13 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
     public void turn(int oldLane, int newLane) throws InterruptedException{ //turning
         String newImagePath;
         if (isHorizontal){
+            while (x<350){
+                accelerate();
+                move();
+            }
             newImagePath = "carV.png";
         }
         else{
-
             newImagePath = "carH.png";
         }
         this.rotate();
@@ -310,7 +313,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
                 if (lane ==2 && y <= 250){
                     turn(2, 1);
                 }
-                else if (lane == 5 && x >= 350){
+                else if (lane == 5 && x >= 320){ //change ths
                     turn (5, 6);
                 }
                 else if (lane == 4 && x >= 300 ){

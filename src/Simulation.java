@@ -196,11 +196,13 @@ public class Simulation implements Runnable{
                 System.out.println("light a");
             }
         }
-    
+        // end here
+        SimulationPanel.GetInstance().done();
         timer.stopTimer();
 
         //export data here
-        mp.ExportData();        
+        mp.ExportData();     
+           
 
 
         System.out.println("Car A Time: " + timerA.getSeconds());

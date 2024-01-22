@@ -70,6 +70,9 @@ class SimulationPanel extends JPanel {
              System.out.println("Image cannot be found!");
          }
     }
+    public void done(){
+        sPanel.setVisible(false);
+    }
 
     public static SimulationPanel GetInstance()
     {
