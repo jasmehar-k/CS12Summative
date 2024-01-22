@@ -15,8 +15,8 @@ import java.util.Random;
 public class Simulation implements Runnable{
     boolean carADone = false;
     boolean carBDone = false;
-    int lightATime;
-    int lightBTime;
+    int lightATime; // time lightA will be on for
+    int lightBTime; // time lightB will be on for
     Light lightA;
     Light lightB;
     long lastLightToggleTime = 0;
@@ -31,6 +31,7 @@ public class Simulation implements Runnable{
     Intersection intersection = new Intersection();
     
     ArrayList<Car> carList = new ArrayList<Car>();;
+    // initializes the cars:
     Car carA = new Car(0,lane14Y, 50, 25,4,4, lightA, intersection, true, this);
     Car carB = new Car(lane36X,470, 25, 50, 3,3,lightB,intersection, true, this);
      
@@ -80,7 +81,7 @@ public class Simulation implements Runnable{
         car55.setLight(lightA);
         car56.setLight(lightA);
         
-
+        // sets up the cars' behind and front cars
         carSetup(car43, carA, 4);
         carSetup(car44, car43, 4);
         carSetup(car45, car44, 4);
@@ -106,8 +107,8 @@ public class Simulation implements Runnable{
         carList.add(car23);
         carList.add(car30);
         carList.add(car31);
-         carList.add(car43);
-         carList.add(car44);
+        carList.add(car43);
+        carList.add(car44);
         carList.add(car45);
         carList.add(car46);
         carList.add(car53);
@@ -176,7 +177,6 @@ public class Simulation implements Runnable{
 // Traffic Lights Code
             if (lightA.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightATime) {
                 lightA.setValue(false);
-                //lightB.setValue(true);
                 lastLightToggleTime = timer.getCurrentSeconds();
             }
             else if (!lightATurn && !lightA.checkIsGreen() && !lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == 10) {
@@ -187,12 +187,10 @@ public class Simulation implements Runnable{
             }
             else if ( lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == lightBTime) {
                 lightB.setValue(false);
-                //lightB.setValue(true);
                 lastLightToggleTime = timer.getCurrentSeconds();
             }
             else if (lightATurn && !lightA.checkIsGreen() && !lightB.checkIsGreen() && timer.getCurrentSeconds() - lastLightToggleTime == 10) {
                 lightA.setValue(true);
-                //lightB.setValue(true);
                 lightATurn = false;
                 lastLightToggleTime = timer.getCurrentSeconds();
                 System.out.println("light a");
@@ -236,6 +234,7 @@ public class Simulation implements Runnable{
         t55.start();
         t56.start();
         
+        // thread joining is commented out because they were causing the program to hang after the threads were done
         /* 
         tA.join();
         tB.join();

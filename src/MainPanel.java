@@ -13,6 +13,7 @@ public class MainPanel extends JPanel {
     JSpinner spinnerB = new JSpinner(new SpinnerNumberModel(10, 10, 90, 1));
     JButton button = new JButton("Run Simulation");
     String[] column = {"Attempt #", "Light A Time", "Light B Time", "Car A Time", "Car B Time", "Average Car Time"};
+    // columns for the table:
     ArrayList<Integer> attempts = new ArrayList<>();
     ArrayList<Integer> lightTimesA = new ArrayList<>();
     ArrayList<Integer> lightTimesB = new ArrayList<>();
@@ -38,7 +39,7 @@ public class MainPanel extends JPanel {
             tableData[i] = new Object[]{attempts.get(i), lightTimesA.get(i), lightTimesB.get(i), carTimesA.get(i), carTimesB.get(i), averages.get(i)};
         }
         
-
+        // table:
         TableModel model = new DefaultTableModel(tableData, column) {
             public Class getColumnClass(int column) {
                 Class returnValue;
@@ -60,7 +61,7 @@ public class MainPanel extends JPanel {
         setLayout(new BorderLayout());
         add(inputPanel, BorderLayout.PAGE_START);
         add(new JScrollPane(simCSVTable), BorderLayout.CENTER);
-
+        // start button:
         button.addActionListener(e -> {
             int lightTimeA = (Integer) spinnerA.getValue();
             int lightTimeB = (Integer) spinnerB.getValue();          

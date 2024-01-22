@@ -1,27 +1,15 @@
 import java.util.TimerTask;
 import java.util.TreeSet;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class Car extends TrafficObject implements Runnable {
 
     Light light; 
     int lane; 
     int objective; //objective lane to be at by the intersection
-    boolean turning = false;
     int topSpeed;
     //long reactionTime = random.nextLong();
     long reactionTime = 780L + (long)(Math.random()*(1220L-780L)); // reaction time in ms  
@@ -34,9 +22,9 @@ public class Car extends TrafficObject implements Runnable {
     Car frontCar; // car in front of the car
     Car behindCar; // car behind the car
     boolean isHorizontal;
-    boolean isSpecial;
+    boolean isSpecial; // car A and car B are special
     Simulation simulation;
-    int delayNum = 0;
+    int delayNum = 0; // variable set to delay how soon cars can change lanes
 
     String imagePath;
        
@@ -51,8 +39,6 @@ public class Car extends TrafficObject implements Runnable {
         this.simulation = simulation;
         intersection.addCar(this, lane);
         TreeSet <Car>laneCars = intersection.getCars(lane);
-        //frontCar = laneCars.higher(this);
-        //behindCar = laneCars.lower(this);
         System.out.println(this.getName() + ": car in front: " + frontCar);
         System.out.println(this.getName() + ": car in front thru map: " + laneCars.higher(this));
 
@@ -60,7 +46,6 @@ public class Car extends TrafficObject implements Runnable {
             Arrays.asList(0,1,4,5)
         );
         isHorizontal = horRoads.contains(lane);
-        //System.out.println("car is horizontal: " + isHorizontal);
         this.isSpecial = isSpecial;
 
         if(isHorizontal){
@@ -116,14 +101,7 @@ public class Car extends TrafficObject implements Runnable {
  *            | | |
  *            | | |
  *             3 2
- * total screen: 807 x 546
- * 
- * 0: 
- *  x > 807 - 361 = 446 
- *  214<=y<=251
- * 1:
- *  x > 807 - 361 = 446
- *  251 <= y <= 
+ * total screen: 828 x 545
 */
 
     public void setLight(Light light){
@@ -140,12 +118,10 @@ public class Car extends TrafficObject implements Runnable {
         speed += speed*accelerateFactor;
         if (speed > topSpeed){
             speed = topSpeed;
-            //System.out.println("top speed");
         }
     }
     public void decelerate(){
         speed -= accelerateFactor;
-        System.out.println("decelerating");
         if (speed < 0){
             speed = 0;
         }
@@ -155,8 +131,6 @@ public class Car extends TrafficObject implements Runnable {
         y = yVal;
     }
     public void move(){
-        //System.out.println("speed: " + speed);
-
         if(isHorizontal){
             x += speed/10;
         }
@@ -170,7 +144,6 @@ public class Car extends TrafficObject implements Runnable {
        {
            return false;
        }
-        
        return checkIfAtIntersection() && !light.checkIsGreen();
     }
         
@@ -239,7 +212,6 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
     }
     // changing lanes while driving
     public void changeLanes(int side, int oldLane, int newLane){  // side: -1:go left, 1:go right
-        //System.out.println("changing lanes");
         TreeSet <Car>newLaneCars = (TreeSet <Car>)intersection.getCars(newLane).clone();
         if (oldLane <4){
             if (newLaneCars != null){
@@ -265,7 +237,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
         switchLanes(oldLane, newLane);
     }
 
-    public void turn(int oldLane, int newLane) throws InterruptedException{
+    public void turn(int oldLane, int newLane) throws InterruptedException{ //turning
         String newImagePath;
         if (isHorizontal){
             newImagePath = "carV.png";
@@ -283,25 +255,20 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
         passed = true;
 
     }
-    public void pass(int oldLane, int newLane) throws InterruptedException{
-        //System.out.println("went straight " + lane );
+    public void pass(int oldLane, int newLane) throws InterruptedException{ //pass the intersecton
         switchLanes(oldLane, newLane);
         passed = true;
     }
 
     public void drive() throws InterruptedException{
-        //System.out.println(y-light.getBottomValue());
         while (!simulation.isAllDone()){ 
-            //System.out.println(light.isGreen);
             Thread.sleep(1000);
             
             delayNum++;
-            //System.out.println("lane:" + lane);
             
             move();
             // controlling speed:
             if (checkIfCarShouldStop() || checkCarFront()){  // light is red or car in front
-                //System.out.println("red light or car");
                 if (speed > 0){ // moving
                     speed = 0;
                 }
@@ -360,7 +327,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
                     System.out.println("car A: (" + x + "," + y + ")");
 
                 }
-                if (x>=800){
+                if (x>=800){ //end limit for horizontal cars
                     System.out.println("done! " + lane);
                     if(isSpecial){ //CarA done
                         System.out.println("Car a donee");
@@ -373,14 +340,11 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
                     return;
 
                 }
-                else if(y<= -50){
+                else if(y<= -50){ // end limit for vertical cars
                     System.out.println("done!" + lane);
                     if (isSpecial){ // Car B done
                         System.out.println("car b donee");
                         simulation.setBDone();
-                    }
-                    else{
-                        //respawn
                     }
                     if (behindCar != null){
                         behindCar.frontCar = null;
