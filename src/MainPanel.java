@@ -25,12 +25,28 @@ public class MainPanel extends JPanel {
     public MainPanel() {
         importData(attempts, lightTimesA, lightTimesB, carTimesA, carTimesB, averages);
 
+        JPanel textPanel = new JPanel();
         JPanel inputPanel = new JPanel();
+
+        textPanel.add(new JLabel("Welcome to the Traffic Simulator!"));
+        textPanel.add(new JLabel("This simulation allows you to measure traffic flow and how traffic light timings affect efficiency."));
+        textPanel.add(new JLabel("You can affect traffic flow by changing the duration of green lights at an intersection from a minimum of 10 seconds to a maximum of 90 seconds."));
+        textPanel.add(new JLabel("Among the standardized number of cars, two cars will measure efficiency - Car A will travel from left to right, and Car B will travel from bottom to top."));
+        textPanel.add(new JLabel("The simulation will measure the time it takes for both cars to reach their predetermined destinations on the opposite side of the intersection."));
+        textPanel.add(new JLabel(" Clicking the different headings on the table will allow you to sort the table by minimum to maximum under the chosen heading. Have fun!"));
+
         inputPanel.add(new JLabel("Time for light A: "));
         inputPanel.add(spinnerA);
         inputPanel.add(new JLabel("Time for light B: "));
         inputPanel.add(spinnerB);
         inputPanel.add(button);
+        // JPanel inputPanel = new JPanel();
+
+        // inputPanel.add(new JLabel("Time for light A: "));
+        // inputPanel.add(spinnerA);
+        // inputPanel.add(new JLabel("Time for light B: "));
+        // inputPanel.add(spinnerB);
+        // inputPanel.add(button);
 
         int length = attempts.size();
         Object[][] tableData = new Object[length][6];
@@ -54,12 +70,24 @@ public class MainPanel extends JPanel {
 
         RowSorter<TableModel> sorter = new TableRowSorter<>(model);
 
-        simCSVTable = new JTable(model);
-        simCSVTable.setBounds(100, 55, 1000, 200);
+        // simCSVTable = new JTable(model);
+        // simCSVTable.setBounds(100, 55, 1000, 200);
+        // simCSVTable.setRowSorter(sorter);
+
+        // setLayout(new BorderLayout());
+        // add(inputPanel, BorderLayout.PAGE_START);
+        // add(new JScrollPane(simCSVTable), BorderLayout.CENTER);
+        JTable simCSVTable = new JTable(model);
+        simCSVTable.setBounds(1, 1, 1, 1);
         simCSVTable.setRowSorter(sorter);
 
         setLayout(new BorderLayout());
-        add(inputPanel, BorderLayout.PAGE_START);
+
+        textPanel.setPreferredSize(new Dimension(1000, 120));
+        inputPanel.setPreferredSize(new Dimension(200, 400));
+
+        add(textPanel, BorderLayout.PAGE_START);
+        add(inputPanel, BorderLayout.LINE_START);
         add(new JScrollPane(simCSVTable), BorderLayout.CENTER);
         // start button:
         button.addActionListener(e -> {
@@ -83,6 +111,8 @@ public class MainPanel extends JPanel {
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
+
+            refreshTable(simCSVTable);
         });
     }
 
