@@ -28,16 +28,16 @@ public class Intersection {
         cars.put(7,lane7);
     }
 
-    public TreeSet<Car> getCars(int laneNum) {  // outputs all the cars in a specified lane as a tree set
+    public synchronized TreeSet<Car> getCars(int laneNum) {  // outputs all the cars in a specified lane as a tree set
         return cars.get(laneNum); 
     }
-    public void addCar (Car car, int laneNum){ // adds a car to a specific lane
+    public synchronized void addCar (Car car, int laneNum){ // adds a car to a specific lane
         TreeSet<Car> lane = cars.get(laneNum); // O (log n)
         lane.add(car); // O(log n)
         cars.put(laneNum, lane);
         System.out.println(cars.get(laneNum).contains(car));
     }
-    public void removeCar (Car car, int laneNum){ // removes a car from its lane
+    public synchronized void removeCar (Car car, int laneNum){ // removes a car from its lane
         TreeSet<Car> lane = cars.get(laneNum);
         if (lane.contains(car)){
             lane.remove(car);

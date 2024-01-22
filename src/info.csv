@@ -1,2 +1,4 @@
 attempts,lightA,lightB,timeA,timeB,averages
 1,10,10,126,126,126.0
+2,10,10,119,129,124.0
+3,10,10,125,129,127.0

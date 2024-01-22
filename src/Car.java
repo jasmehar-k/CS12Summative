@@ -240,7 +240,7 @@ public boolean checkIfAtIntersection(){ // returns true if at the intersection
     // changing lanes while driving
     public void changeLanes(int side, int oldLane, int newLane){  // side: -1:go left, 1:go right
         //System.out.println("changing lanes");
-        TreeSet <Car>newLaneCars = intersection.getCars(newLane);
+        TreeSet <Car>newLaneCars = (TreeSet <Car>)intersection.getCars(newLane).clone();
         if (oldLane <4){
             if (newLaneCars != null){
                 for (Car newLaneCar : newLaneCars){
